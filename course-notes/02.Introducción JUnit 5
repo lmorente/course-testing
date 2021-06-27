@@ -1,0 +1,25 @@
+JUnit 5: JUnit es un framework para escribir pruebas unitarias de nuestro código y ejecutarlas en la JVM.
+Utiliza programación funcional y lambdas e incluye varios estilos diferentes de pruebas, configuraciones,
+anotaciones, ciclo de vida etc..
+
+**Diferencias entre versión JUnit 4 vs Junit 5: Incluye las actualizaciones necesarias para el testing del
+código a partir de java 8, en versiones anteriores no se incluyen las expresiones lambdas, streams..**
+
+Arquitectura JUnit 5:
+    - JUnit Pltaform: core / librería principal es el framework de ejecución que lanza las pruebas unitarias.
+      Permite la ejecución no solo de JUnit Jupiter / JUnit Vintage sino de frameworks de terceros, y con los
+      distintos IDE o de build tools (Gradle, Maven, Ant) que utilicemos.
+
+    - Junit Jupiter: API de interacción para programadores, nos permite escribir nuestros test (anotaciones,
+      estilos de testing), permite escribir extensiones para agregar o extender JUnit Jupiter por ejemplo para
+      su uso con Spring Framework. Algunas anotaciones nuevas de la versión 5:
+          @Test
+          @DisplayName
+          @Name
+          @Tag
+          @ExtendWith
+          @BeforeEach / @AfterEach
+          @BeforeAll / @AfterAll
+          @Disabled
+
+    - JUnit Vintage: Integrar versión 3 y 4 para que convivan distintas versiones en un proyecto.
