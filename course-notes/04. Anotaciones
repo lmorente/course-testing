@@ -1,0 +1,50 @@
+@Disabled: skip test
+
+Anotaciones del cliclo de vida:
+    @AfterAll (after all test)
+    @AfterEach (after each test)
+    @BeforeEach (before each test)
+    @BeforeAll (before all test)
+
+@AfterAll y @BeforeAll son métodos estaticos, invocados antes de crear la instancia de la clase test
+
+@EnabledOnOs() -> se habilita un test en determinados SO
+@DisabledOnOs() -> se deshabilita un test en determinados SO
+
+@EnabledOnJre() -> se habilita un test en determinadas versiones de java
+@DisabledOnJre() -> se deshabilita un test en determinadas versiones de java
+
+@EnabledSystemProperty() -> se habilita un test al cumplir determinadas condiciones del sistema
+@DisabledystemProperty() -> se deshabilita un test al no cumplir determinadas condiciones del sistema
+
+/*Código para pintar las propiedades que se registran por sistema*/
+Properties properties = System.getProperties()
+properties.forEach((k, v) -> System.out.println(k + ":" + v))
+
+/*ejemplos de uso*/
+@EnabledSystemProperty(named = "java.version", matches = ".*15.*")
+@EnabledSystemProperty(named = "os.arch", matches = ".*32.*")
+
+@EnabledIfEnvironmentVariable() -> se habilita un test al cumplir variables de ambiente del sistema
+@DisabledIfEnvironmentVariable() -> se deshabilita un test al no cumplir variables de ambiente del sistema
+
+/*Código para pintar las variables del sistema*/
+Map<String, String> env = System.getenv()
+env.forEach((k, v) -> System.out.println(k + ":" + v))
+
+/*ejemplo de uso*/
+@EnabledSystemProperty(named = "JAVA_HOME", matches = "*jdk-15.0.1.*")
+@EnabledSystemProperty(named = "ENVIRONMENT", matches = "DEV")
+
+@Nested anidar test
+
+@RepetedTest
+
+@ParameterizedTest
+
+@Tag
+para ejecutar test asociados a una categoria
+
+@Timeout(60)
+Por defecto segundos, con los paramentros value y unit les podemos indicar otras unidades
+De manera similar podemos usar el assertTimeout

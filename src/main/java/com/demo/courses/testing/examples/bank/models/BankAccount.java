@@ -1,7 +1,6 @@
-package com.demo.courses.testing.examples.models;
+package com.demo.courses.testing.examples.bank.models;
 
-import com.demo.courses.testing.examples.exceptions.AccountBalanceException;
-import lombok.AllArgsConstructor;
+import com.demo.courses.testing.examples.bank.exceptions.AccountBalanceException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +9,18 @@ import java.util.Objects;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class BankAccount  {
 
     private String customer;
 
     private BigDecimal balance;
+
+    private Bank bank;
+
+    public BankAccount(String customer, BigDecimal balance) {
+        this.customer = customer;
+        this.balance = balance;
+    }
 
     public void debit(BigDecimal amount) throws AccountBalanceException {
         if(Objects.nonNull(this.balance) && Objects.nonNull(amount)){

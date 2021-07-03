@@ -1,4 +1,4 @@
-package com.demo.courses.testing.examples.exceptions;
+package com.demo.courses.testing.examples.bank.exceptions;
 
 public class AccountBalanceException extends Exception{
 

@@ -1,6 +1,6 @@
-package com.demo.courses.testing.examples.models;
+package com.demo.courses.testing.examples.bank.models;
 
-import com.demo.courses.testing.examples.exceptions.AccountBalanceException;
+import com.demo.courses.testing.examples.bank.exceptions.AccountBalanceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,10 +13,12 @@ import java.util.List;
 public class Bank {
 
     private List<BankAccount> accounts;
+
     private String name;
 
     public void add(BankAccount account){
         this.accounts.add(account);
+        account.setBank(this);
     }
 
     public void toTransfer(BankAccount origen, BankAccount destination, BigDecimal transfer)
@@ -27,6 +29,5 @@ public class Bank {
 
     public Bank() {
         this.accounts = new ArrayList<>();
-        this.name = name;
     }
 }
