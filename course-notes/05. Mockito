@@ -1,0 +1,11 @@
+Capas de una aplicación empresarial: Controller -> Service -> Respository
+
+Al realizar un test unitario en el caso de una aplicación convarias capas
+vamos a necesitar inyectar las dependencias que usa la clase que queremos
+testear. No nos importa el código o comportamiento de las dependecias, solo
+simulamos este componente.
+
+Mockito es un framework de pruebas que nos permite crear objetos simulados
+(mock) en un entorno controlado y determinado. Le podemos dar un comportamiento
+deseado a un mock.
+
