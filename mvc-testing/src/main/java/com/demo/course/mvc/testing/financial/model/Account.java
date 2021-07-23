@@ -5,14 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="accounts")
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String person;
@@ -43,4 +50,5 @@ public class Account {
     public int hashCode() {
         return Objects.hash(id, person, balance);
     }
+
 }

@@ -8,52 +8,59 @@ import com.demo.course.mvc.testing.financial.repository.BankRepository;
 import com.demo.course.mvc.testing.financial.service.BankOperationsService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
 public class BankOperationsServiceImpl implements BankOperationsService {
 
+    @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
     private BankRepository bankRepository;
 
     @Override
     public Account findAccountById(Long id) {
-        return accountRepository.findById(id);
+        return accountRepository.findById(id).orElseThrow();
     }
 
     @Override
     public int getTotalTransferBank(Long id) {
-        Bank bank = bankRepository.findById(id);
-        return Objects.nonNull(bank) ? bank.getTotalTransfer() : 0;
+        Optional<Bank> bankOpt = bankRepository.findById(id);
+        return bankOpt.isPresent() ? bankOpt.get().getTotalTransfer() : 0;
     }
 
     @Override
     public BigDecimal getBalanceAccount(Long id) {
-        Account account = accountRepository.findById(id);
-        return Objects.nonNull(account) ? account.getBalance() : new BigDecimal("0");
+        Optional<Account> accountOpt = accountRepository.findById(id);
+        return accountOpt.isPresent() ? accountOpt.get().getBalance() : new BigDecimal("0");
     }
 
     @Override
     public void transfer(Long originAccountId, Long destiantionAccountId,
                          BigDecimal amount, Long bankId) throws BankException {
-        Account origin = accountRepository.findById(originAccountId);
-        origin.debit(amount);
-        accountRepository.update(origin);
+        Optional<Account> originOpt = accountRepository.findById(originAccountId);
+        Optional<Account> destinationOpt = accountRepository.findById(destiantionAccountId);
 
-        Account destination = accountRepository.findById(destiantionAccountId);
-        destination.credit(amount);
-        accountRepository.update(destination);
+        if(originOpt.isPresent() && destinationOpt.isPresent()) {
+            Account origin = originOpt.get();
+            origin.debit(amount);
+            accountRepository.save(origin);
 
-        Bank bank = bankRepository.findById(bankId);
-        int total = bank.getTotalTransfer();
-        bank.setTotalTransfer(++total);
-        bankRepository.update(bank);
+            Account destination = destinationOpt.get();
+            destination.credit(amount);
+            accountRepository.save(destination);
 
+            Bank bank = bankRepository.findById(bankId).orElseThrow();
+            int total = bank.getTotalTransfer();
+            bank.setTotalTransfer(++total);
+            bankRepository.save(bank);
+        }
     }
 }

@@ -2,14 +2,14 @@ package com.demo.course.mvc.testing.financial.repository;
 
 import com.demo.course.mvc.testing.financial.model.Bank;
 
-import java.util.List;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BankRepository {
+import java.util.Optional;
 
-    List<Bank> findAll();
+@Repository
+public interface BankRepository extends CrudRepository<Bank, Long> {
 
-    Bank findById(Long id);
-
-    void update(Bank bank);
+    Optional<Bank> findById(Long id);
 
 }

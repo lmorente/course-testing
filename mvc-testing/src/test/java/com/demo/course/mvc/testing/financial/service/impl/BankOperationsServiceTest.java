@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -42,15 +43,15 @@ class BankOperationsServiceTest {
 
     @Test
     void testFindAccountById() {
-        when(accountRepository.findById(2L)).thenReturn(data.getAccount002());
+        when(accountRepository.findById(2L)).thenReturn(Optional.of(data.getAccount002()));
         Account account = service.findAccountById(2L);
         assertSame(data.getAccount002(), account);
     }
 
     @Test
     void testGetTotalTransferBank() {
-        when(bankRepository.findById(1L)).thenReturn(data.getBank001());
-        when(bankRepository.findById(2L)).thenReturn(data.getBank002());
+        when(bankRepository.findById(1L)).thenReturn(Optional.of(data.getBank001()));
+        when(bankRepository.findById(2L)).thenReturn(Optional.of(data.getBank002()));
 
         int totalOne = service.getTotalTransferBank(1L);
         int totalTwo = service.getTotalTransferBank(2L);
@@ -62,8 +63,8 @@ class BankOperationsServiceTest {
 
    @Test
     void testGetBalanceAccount() {
-       when(accountRepository.findById(3L)).thenReturn(data.getAccount003());
-       when(accountRepository.findById(4L)).thenReturn(data.getAccount004());
+       when(accountRepository.findById(3L)).thenReturn(Optional.of(data.getAccount003()));
+       when(accountRepository.findById(4L)).thenReturn(Optional.of(data.getAccount004()));
 
        BigDecimal accountThree = service.getBalanceAccount(3L);
        BigDecimal accountFour = service.getBalanceAccount(4L);
@@ -77,9 +78,9 @@ class BankOperationsServiceTest {
     @Test
     void testCorrectTransfer() throws BankException {
         //Given
-        when(bankRepository.findById(anyLong())).thenReturn(data.getBank001());
-        when(accountRepository.findById(1L)).thenReturn(data.getAccount001());
-        when(accountRepository.findById(4L)).thenReturn(data.getAccount004());
+        when(bankRepository.findById(anyLong())).thenReturn(Optional.of(data.getBank001()));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(data.getAccount001()));
+        when(accountRepository.findById(4L)).thenReturn(Optional.of(data.getAccount004()));
 
         //When
         service.transfer(1L, 4L, new BigDecimal("3500"), 1L);
@@ -87,9 +88,9 @@ class BankOperationsServiceTest {
         //Then
         InOrder order = inOrder(bankRepository, accountRepository);
         order.verify(bankRepository).findById(1L);
-        order.verify(bankRepository).update(any(Bank.class));;
+        order.verify(bankRepository).save(any(Bank.class));;
 
-        verify(accountRepository, times(2)).update(any(Account.class));
+        verify(accountRepository, times(2)).save(any(Account.class));
 
         BigDecimal balanceOrigen = service.getBalanceAccount(1L);
         BigDecimal balanceDestination = service.getBalanceAccount(4L);
@@ -101,9 +102,9 @@ class BankOperationsServiceTest {
     @Test
     void testErrorTransfer() {
         //Given
-        when(bankRepository.findById(anyLong())).thenReturn(data.getBank001());
-        when(accountRepository.findById(1L)).thenReturn(data.getAccount001());
-        when(accountRepository.findById(4L)).thenReturn(data.getAccount004());
+        when(bankRepository.findById(anyLong())).thenReturn(Optional.of(data.getBank001()));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(data.getAccount001()));
+        when(accountRepository.findById(4L)).thenReturn(Optional.of(data.getAccount004()));
 
         //When
         assertThrows(BankException.class, ()->{
@@ -114,7 +115,7 @@ class BankOperationsServiceTest {
         BigDecimal balanceOrigen = service.getBalanceAccount(4L);
         BigDecimal balanceDestination = service.getBalanceAccount(1L);
 
-        verify(bankRepository, never()).update(any(Bank.class));
+        verify(bankRepository, never()).save(any(Bank.class));
 
         assertEquals(new BigDecimal("567.04"), balanceOrigen);
         assertEquals(new BigDecimal("12345.67"), balanceDestination);

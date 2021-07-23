@@ -1,27 +1,31 @@
 package com.demo.course.mvc.testing.financial.model;
 
-import com.demo.course.mvc.testing.financial.exception.BankException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="banks")
 public class Bank {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String name;
 
+    @Column(name = "total_transfer")
     private int totalTransfer;
 
     private BigDecimal balance;
-
-
 
     @Override
     public boolean equals(Object o) {
