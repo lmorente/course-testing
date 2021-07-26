@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -26,23 +27,27 @@ public class BankOperationsServiceImpl implements BankOperationsService {
     private BankRepository bankRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Account findAccountById(Long id) {
         return accountRepository.findById(id).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getTotalTransferBank(Long id) {
         Optional<Bank> bankOpt = bankRepository.findById(id);
         return bankOpt.isPresent() ? bankOpt.get().getTotalTransfer() : 0;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal getBalanceAccount(Long id) {
         Optional<Account> accountOpt = accountRepository.findById(id);
         return accountOpt.isPresent() ? accountOpt.get().getBalance() : new BigDecimal("0");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void transfer(Long originAccountId, Long destiantionAccountId,
                          BigDecimal amount, Long bankId) throws BankException {
         Optional<Account> originOpt = accountRepository.findById(originAccountId);
